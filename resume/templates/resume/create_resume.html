@@ -1,0 +1,881 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% if editing %}Edit Resume{% else %}Create Resume{% endif %} | SmartResume</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #5b5de6;
+            --primary-dark: #4547c7;
+            --text: #20243a;
+            --muted: #777e95;
+            --border: #e5e8f2;
+            --background: #f5f6fc;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .navbar {
+            height: 76px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 7%;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            font-size: 21px;
+            font-weight: 800;
+            color: #272a46;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 13px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 22px;
+            background: linear-gradient(135deg, #7274ff, #5145cd);
+            box-shadow: 0 5px 12px #5b5de633;
+        }
+
+        .brand span {
+            color: var(--primary);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .secure-text {
+            font-size: 13px;
+            color: #737a91;
+        }
+
+        .back-link {
+            color: #4547c7;
+            border: 1px solid #e0e2f7;
+            padding: 10px 15px;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: .2s;
+        }
+
+        .back-link:hover {
+            background: #f1f1ff;
+        }
+
+        .page-container {
+            max-width: 1050px;
+            margin: 35px auto 60px;
+            padding: 0 22px;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(120deg, #5759db, #7975f6 65%, #9a80f6);
+            border-radius: 20px;
+            padding: 32px 36px;
+            color: white;
+            margin-bottom: 28px;
+            box-shadow: 0 12px 30px #6666df25;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            right: -55px;
+            top: -95px;
+            border: 35px solid #ffffff14;
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.7px;
+            text-transform: uppercase;
+            color: #e4e5ff;
+            margin-bottom: 12px;
+        }
+
+        .hero h1 {
+            font-size: clamp(25px, 4vw, 34px);
+            line-height: 1.25;
+            margin-bottom: 12px;
+            font-weight: 750;
+        }
+
+        .hero p {
+            font-size: 14px;
+            color: #f0efff;
+            line-height: 1.7;
+            max-width: 590px;
+        }
+
+        .steps {
+            display: flex;
+            align-items: center;
+            margin-top: 25px;
+            max-width: 520px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 12px;
+            color: #ffffffb8;
+            white-space: nowrap;
+        }
+
+        .step-number {
+            width: 29px;
+            height: 29px;
+            border-radius: 50%;
+            border: 1px solid #ffffff75;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .step.active {
+            color: white;
+            font-weight: 700;
+        }
+
+        .step.active .step-number {
+            background: white;
+            color: #5557d8;
+            border-color: white;
+        }
+
+        .step-line {
+            flex: 1;
+            height: 1px;
+            background: #ffffff60;
+            margin: 0 12px;
+            min-width: 15px;
+        }
+
+        .form-card {
+            background: white;
+            border: 1px solid #e9eaf4;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 6px 24px #20254a08;
+            margin-bottom: 22px;
+        }
+
+        .card-heading {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 25px 30px;
+            border-bottom: 1px solid #f0f1f7;
+        }
+
+        .section-icon {
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
+            border-radius: 13px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 21px;
+            background: #f0f0ff;
+        }
+
+        .icon-blue {
+            background: #eef5ff;
+        }
+
+        .icon-purple {
+            background: #f3edff;
+        }
+
+        .icon-green {
+            background: #e9faf4;
+        }
+
+        .card-heading h2 {
+            font-size: 17px;
+            margin: 2px 0 6px;
+            color: #252941;
+        }
+
+        .card-heading p {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .section-content {
+            padding: 27px 30px 30px;
+        }
+
+        .field-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 23px 22px;
+        }
+
+        .field {
+            min-width: 0;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        .field label {
+            display: block;
+            color: #363b54;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 9px;
+        }
+
+        .required {
+            color: #e05270;
+            margin-left: 3px;
+        }
+
+        .optional {
+            color: #9399ab;
+            font-weight: 400;
+            font-size: 11px;
+            margin-left: 5px;
+        }
+
+        .field input,
+        .field textarea,
+        .field select {
+            display: block;
+            width: 100%;
+            border: 1px solid #dfe3ee;
+            background: #fcfcff;
+            border-radius: 9px;
+            padding: 12px 14px;
+            font-family: inherit;
+            font-size: 13px;
+            color: #272b42;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+        }
+
+        .field input {
+            min-height: 46px;
+        }
+
+        .field textarea {
+            min-height: 125px;
+            resize: vertical;
+            line-height: 1.7;
+        }
+
+        .field input::placeholder,
+        .field textarea::placeholder {
+            color: #a2a7b8;
+        }
+
+        .field input:focus,
+        .field textarea:focus,
+        .field select:focus {
+            border-color: #7778ed;
+            background: white;
+            box-shadow: 0 0 0 3px #7778ed1c;
+        }
+
+        .field .helptext {
+            display: block;
+            margin-top: 7px;
+            font-size: 11px;
+            color: #858ba0;
+            line-height: 1.5;
+        }
+
+        .field ul.errorlist {
+            list-style: none;
+            margin: 7px 0 0;
+            color: #d73555;
+            font-size: 12px;
+        }
+
+        .error-summary {
+            padding: 15px 18px;
+            background: #fff0f1;
+            color: #ad2340;
+            border: 1px solid #ffd2d9;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-bottom: 22px;
+            line-height: 1.7;
+        }
+
+        .message {
+            padding: 13px 16px;
+            border-radius: 9px;
+            background: #ecfdf5;
+            border: 1px solid #c7f0dc;
+            color: #166747;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        .tip-box {
+            display: flex;
+            gap: 13px;
+            align-items: flex-start;
+            padding: 18px 20px;
+            background: #f0f5ff;
+            border: 1px solid #e0e9ff;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .tip-icon {
+            font-size: 21px;
+        }
+
+        .tip-box strong {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 5px;
+            color: #304a91;
+        }
+
+        .tip-box p {
+            color: #63769d;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            padding: 22px 25px;
+            background: white;
+            border: 1px solid #e9eaf4;
+            border-radius: 15px;
+        }
+
+        .footer-note {
+            color: #777e95;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .footer-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 9px;
+            padding: 13px 19px;
+            font-size: 13px;
+            font-family: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .btn-cancel {
+            background: #f0f1f7;
+            color: #51566c;
+        }
+
+        .btn-cancel:hover {
+            background: #e3e5ef;
+        }
+
+        .btn-primary {
+            background: linear-gradient(110deg, #5c5fe5, #7772f2);
+            color: white;
+            box-shadow: 0 5px 13px #6262df35;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px #6262df45;
+        }
+
+        .btn:focus-visible,
+        a:focus-visible {
+            outline: 3px solid #a5b4fc;
+            outline-offset: 3px;
+        }
+
+        .bottom-note {
+            text-align: center;
+            color: #969bb0;
+            font-size: 11px;
+            margin-top: 25px;
+        }
+
+        @media (max-width: 650px) {
+            .navbar {
+                height: auto;
+                min-height: 70px;
+                padding: 15px 18px;
+            }
+
+            .brand {
+                font-size: 18px;
+            }
+
+            .secure-text {
+                display: none;
+            }
+
+            .nav-right {
+                gap: 8px;
+            }
+
+            .back-link {
+                padding: 9px 10px;
+                font-size: 12px;
+            }
+
+            .page-container {
+                margin-top: 22px;
+                padding: 0 13px;
+            }
+
+            .hero {
+                padding: 25px 21px;
+                border-radius: 15px;
+            }
+
+            .steps {
+                gap: 5px;
+            }
+
+            .step {
+                gap: 6px;
+                font-size: 10px;
+            }
+
+            .step-line {
+                margin: 0 4px;
+            }
+
+            .step-number {
+                width: 25px;
+                height: 25px;
+            }
+
+            .card-heading {
+                padding: 20px;
+            }
+
+            .section-content {
+                padding: 22px 20px;
+            }
+
+            .field-grid {
+                grid-template-columns: 1fr;
+                gap: 19px;
+            }
+
+            .field.full {
+                grid-column: auto;
+            }
+
+            .form-footer {
+                padding: 19px;
+            }
+
+            .footer-buttons {
+                width: 100%;
+            }
+
+            .footer-buttons .btn {
+                flex: 1;
+            }
+        }
+
+        @media print {
+            .navbar,
+            .hero,
+            .form-footer,
+            .bottom-note {
+                display: none;
+            }
+
+            body {
+                background: white;
+            }
+
+            .page-container {
+                margin: 0;
+                max-width: none;
+            }
+
+            .form-card {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <a href="{% url 'dashboard' %}" class="brand">
+        <div class="brand-icon">✦</div>
+        <div>Smart<span>Resume</span></div>
+    </a>
+
+    <div class="nav-right">
+        <span class="secure-text">✦ Your career starts here</span>
+        <a href="{% url 'dashboard' %}" class="back-link">← Dashboard</a>
+    </div>
+</nav>
+
+<main class="page-container">
+
+    <section class="hero">
+        <div class="hero-content">
+            <span class="eyebrow">RESUME BUILDER</span>
+
+            <h1>
+                {% if editing %}
+                    Update your resume
+                {% else %}
+                    Let's build your future.
+                {% endif %}
+            </h1>
+
+            <p>
+                {% if editing %}
+                    Update your details and keep your professional profile up to date.
+                {% else %}
+                    Tell us about yourself, your skills and your achievements.
+                    We'll help you turn your details into a professional resume.
+                {% endif %}
+            </p>
+
+            <div class="steps">
+                <div class="step active">
+                    <span class="step-number">1</span>
+                    <span>Your Details</span>
+                </div>
+
+                <div class="step-line"></div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <span>Choose Design</span>
+                </div>
+
+                <div class="step-line"></div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <span>Download</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    {% if form.non_field_errors %}
+        <div class="error-summary">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        <!-- PERSONAL INFORMATION -->
+        <section class="form-card">
+            <div class="card-heading">
+                <div class="section-icon icon-blue">♙</div>
+                <div>
+                    <h2>Personal Information</h2>
+                    <p>Start with your name and contact details.</p>
+                </div>
+            </div>
+
+            <div class="section-content">
+                <div class="field-grid">
+
+                    <div class="field full">
+                        <label for="{{ form.full_name.id_for_label }}">
+                            Full Name <span class="required">*</span>
+                        </label>
+                        {{ form.full_name }}
+                        {{ form.full_name.errors }}
+                    </div>
+
+                    <div class="field">
+                        <label for="{{ form.email.id_for_label }}">
+                            Email Address <span class="required">*</span>
+                        </label>
+                        {{ form.email }}
+                        {{ form.email.errors }}
+                    </div>
+
+                    <div class="field">
+                        <label for="{{ form.phone.id_for_label }}">
+                            Phone Number <span class="required">*</span>
+                        </label>
+                        {{ form.phone }}
+                        {{ form.phone.errors }}
+                    </div>
+
+                    <div class="field full">
+                        <label for="{{ form.address.id_for_label }}">
+                            Address <span class="optional">Optional</span>
+                        </label>
+                        {{ form.address }}
+                        {{ form.address.errors }}
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- CAREER OBJECTIVE -->
+        <section class="form-card">
+            <div class="card-heading">
+                <div class="section-icon icon-purple">✧</div>
+                <div>
+                    <h2>Professional Summary</h2>
+                    <p>Introduce your career goals and the value you can bring.</p>
+                </div>
+            </div>
+
+            <div class="section-content">
+                <div class="field">
+                    <label for="{{ form.career_objective.id_for_label }}">
+                        Career Objective <span class="optional">Optional</span>
+                    </label>
+                    {{ form.career_objective }}
+                    {{ form.career_objective.errors }}
+                    <small class="helptext">
+                        Tip: Mention your career goal, strongest skills and area of interest.
+                    </small>
+                </div>
+            </div>
+        </section>
+
+        <!-- EDUCATION -->
+        <section class="form-card">
+            <div class="card-heading">
+                <div class="section-icon icon-blue">▤</div>
+                <div>
+                    <h2>Education</h2>
+                    <p>Highlight your academic qualifications and achievements.</p>
+                </div>
+            </div>
+
+            <div class="section-content">
+                <div class="field">
+                    <label for="{{ form.education.id_for_label }}">
+                        Academic Details <span class="required">*</span>
+                    </label>
+                    {{ form.education }}
+                    {{ form.education.errors }}
+                    <small class="helptext">
+                        Include your degree, college, university, year of study and marks or CGPA if relevant.
+                    </small>
+                </div>
+            </div>
+        </section>
+
+        <!-- SKILLS -->
+        <section class="form-card">
+            <div class="card-heading">
+                <div class="section-icon icon-green">✧</div>
+                <div>
+                    <h2>Skills & Expertise</h2>
+                    <p>Show recruiters what you know and what you can do.</p>
+                </div>
+            </div>
+
+            <div class="section-content">
+                <div class="field">
+                    <label for="{{ form.skills.id_for_label }}">
+                        Technical & Professional Skills <span class="required">*</span>
+                    </label>
+                    {{ form.skills }}
+                    {{ form.skills.errors }}
+                    <small class="helptext">
+                        For example: Python, Django, SQL, HTML, CSS, communication and teamwork.
+                    </small>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS -->
+        <section class="form-card">
+            <div class="card-heading">
+                <div class="section-icon icon-purple">▣</div>
+                <div>
+                    <h2>Projects</h2>
+                    <p>Demonstrate your practical experience through your work.</p>
+                </div>
+            </div>
+
+            <div class="section-content">
+                <div class="field">
+                    <label for="{{ form.projects.id_for_label }}">
+                        Project Details <span class="optional">Optional</span>
+                    </label>
+                    {{ form.projects }}
+                    {{ form.projects.errors }}
+                    <small class="helptext">
+                        Add project titles, objectives, technologies used and your contribution.
+                    </small>
+                </div>
+            </div>
+        </section>
+
+        <!-- INTERNSHIPS -->
+        <section class="form-card">
+            <div class="card-heading">
+                <div class="section-icon icon-blue">▤</div>
+                <div>
+                    <h2>Internships & Experience</h2>
+                    <p>Add internships, training, work experience or relevant activities.</p>
+                </div>
+            </div>
+
+            <div class="section-content">
+                <div class="field">
+                    <label for="{{ form.internships.id_for_label }}">
+                        Experience Details <span class="optional">Optional</span>
+                    </label>
+                    {{ form.internships }}
+                    {{ form.internships.errors }}
+                    <small class="helptext">
+                        If you are a fresher without work experience, you can leave this blank.
+                    </small>
+                </div>
+            </div>
+        </section>
+
+        <!-- CERTIFICATIONS -->
+        <section class="form-card">
+            <div class="card-heading">
+                <div class="section-icon icon-green">✓</div>
+                <div>
+                    <h2>Certifications</h2>
+                    <p>Add relevant courses, certificates and professional training.</p>
+                </div>
+            </div>
+
+            <div class="section-content">
+                <div class="field">
+                    <label for="{{ form.certifications.id_for_label }}">
+                        Certification Details <span class="optional">Optional</span>
+                    </label>
+                    {{ form.certifications }}
+                    {{ form.certifications.errors }}
+                </div>
+            </div>
+        </section>
+
+        <div class="tip-box">
+            <div class="tip-icon">💡</div>
+            <div>
+                <strong>A little tip before you continue</strong>
+                <p>
+                    Use clear and accurate information. After saving your details,
+                    you can select a resume design, preview your resume and download it as a PDF.
+                </p>
+            </div>
+        </div>
+
+        <div class="form-footer">
+            <div class="footer-note">
+                <strong>Almost there!</strong><br>
+                Your next step is choosing your resume design.
+            </div>
+
+            <div class="footer-buttons">
+                <a href="{% url 'dashboard' %}" class="btn btn-cancel">
+                    Cancel
+                </a>
+
+                <button type="submit" class="btn btn-primary">
+                    {% if editing %}
+                        Save Changes <span>→</span>
+                    {% else %}
+                        Continue to Templates <span>→</span>
+                    {% endif %}
+                </button>
+            </div>
+        </div>
+
+    </form>
+
+    <div class="bottom-note">
+        SmartResume · Build your profile. Showcase your potential.
+    </div>
+
+</main>
+
+</body>
+</html>

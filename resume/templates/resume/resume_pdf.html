@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    <style>
+        @page {
+            size: A4;
+            margin: 25px;
+        }
+
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 11px;
+            line-height: 1.5;
+            color: #222222;
+        }
+
+        .resume {
+            width: 100%;
+        }
+
+        .name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .contact {
+            font-size: 10px;
+            margin-bottom: 12px;
+        }
+
+        .line {
+            margin-bottom: 15px;
+        }
+
+        .section {
+            margin-top: 14px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding-bottom: 3px;
+            margin-bottom: 5px;
+        }
+
+        .content {
+            white-space: pre-line;
+        }
+
+
+        /* =========================
+           MODERN ATS
+           ========================= */
+
+        .modern .name {
+            color: #2563eb;
+        }
+
+        .modern .line {
+            border-bottom: 2px solid #2563eb;
+        }
+
+        .modern .section-title {
+            color: #2563eb;
+            border-bottom: 1px solid #d1d5db;
+        }
+
+
+        /* =========================
+           CLASSIC ATS
+           ========================= */
+
+        .classic {
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        .classic .name {
+            text-align: center;
+            color: #111111;
+        }
+
+        .classic .contact {
+            text-align: center;
+        }
+
+        .classic .line {
+            border-bottom: 2px solid #111111;
+        }
+
+        .classic .section-title {
+            color: #111111;
+            border-bottom: 1px solid #333333;
+        }
+
+
+        /* =========================
+           MINIMAL ATS
+           ========================= */
+
+        .minimal .name {
+            font-size: 25px;
+            font-weight: normal;
+            color: #222222;
+        }
+
+        .minimal .contact {
+            color: #666666;
+        }
+
+        .minimal .line {
+            border-bottom: 1px solid #dddddd;
+        }
+
+        .minimal .section-title {
+            font-size: 12px;
+            color: #555555;
+            letter-spacing: 1px;
+            border-bottom: none;
+        }
+
+
+        /* =========================
+           PROFESSIONAL ATS
+           ========================= */
+
+        .professional .name {
+            color: #1f2937;
+        }
+
+        .professional .line {
+            border-bottom: 3px solid #1f2937;
+        }
+
+        .professional .section-title {
+            color: #1f2937;
+            border-bottom: 1px solid #9ca3af;
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+{% if template == "modern" %}
+
+<div class="resume modern">
+
+{% elif template == "classic" %}
+
+<div class="resume classic">
+
+{% elif template == "minimal" %}
+
+<div class="resume minimal">
+
+{% elif template == "professional" %}
+
+<div class="resume professional">
+
+{% else %}
+
+<div class="resume modern">
+
+{% endif %}
+
+
+    <!-- NAME -->
+
+    <div class="name">
+        {{ resume.full_name }}
+    </div>
+
+
+    <!-- CONTACT -->
+
+    <div class="contact">
+
+        {{ resume.email }} |
+        {{ resume.phone }}
+
+        {% if resume.address %}
+            | {{ resume.address }}
+        {% endif %}
+
+    </div>
+
+
+    <div class="line"></div>
+
+
+    <!-- CAREER OBJECTIVE -->
+
+    {% if resume.career_objective %}
+
+    <div class="section">
+
+        <div class="section-title">
+            Career Objective
+        </div>
+
+        <div class="content">
+            {{ resume.career_objective }}
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- EDUCATION -->
+
+    {% if resume.education %}
+
+    <div class="section">
+
+        <div class="section-title">
+            Education
+        </div>
+
+        <div class="content">
+            {{ resume.education }}
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- SKILLS -->
+
+    {% if resume.skills %}
+
+    <div class="section">
+
+        <div class="section-title">
+            Technical Skills
+        </div>
+
+        <div class="content">
+            {{ resume.skills }}
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- PROJECTS -->
+
+    {% if resume.projects %}
+
+    <div class="section">
+
+        <div class="section-title">
+            Projects
+        </div>
+
+        <div class="content">
+            {{ resume.projects }}
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- CERTIFICATIONS -->
+
+    {% if resume.certifications %}
+
+    <div class="section">
+
+        <div class="section-title">
+            Certifications
+        </div>
+
+        <div class="content">
+            {{ resume.certifications }}
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- INTERNSHIPS -->
+
+    {% if resume.internships %}
+
+    <div class="section">
+
+        <div class="section-title">
+            Internships
+        </div>
+
+        <div class="content">
+            {{ resume.internships }}
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+</div>
+
+</body>
+</html>

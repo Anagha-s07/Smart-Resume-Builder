@@ -1,0 +1,301 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Jobs | Smart Resume</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f6fa;
+            color: #1f2937;
+        }
+
+        header {
+            background: #111827;
+            color: white;
+            padding: 20px 30px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .topbar p {
+            color: #64748b;
+            margin-top: 8px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .button:hover {
+            background: #1d4ed8;
+        }
+
+        .button.secondary {
+            background: #475569;
+        }
+
+        .button.warning {
+            background: #b45309;
+        }
+
+        .button.danger {
+            background: #dc2626;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card, .job-card {
+            background: white;
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card p {
+            color: #64748b;
+            margin: 0 0 12px;
+        }
+
+        .stat-card h2 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .job-card {
+            margin-bottom: 18px;
+        }
+
+        .job-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .job-heading h2 {
+            margin: 0 0 10px;
+            font-size: 21px;
+        }
+
+        .job-meta {
+            color: #64748b;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .status {
+            display: inline-block;
+            border-radius: 20px;
+            padding: 7px 12px;
+            background: #dcfce7;
+            color: #166534;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .status.closed {
+            background: #e5e7eb;
+            color: #475569;
+        }
+
+        .description {
+            margin: 18px 0;
+            line-height: 1.7;
+            white-space: pre-line;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 17px;
+        }
+
+        .actions form {
+            margin: 0;
+        }
+
+        .empty {
+            text-align: center;
+            background: white;
+            padding: 45px 20px;
+            border-radius: 12px;
+        }
+
+        .empty p {
+            color: #64748b;
+            margin: 12px 0 22px;
+        }
+
+        @media (max-width: 650px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 0 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <h1>💼 Manage Jobs</h1>
+</header>
+
+<main class="container">
+    <div class="topbar">
+        <div>
+            <h2>Your Job Postings</h2>
+            <p>View and manage the vacancies posted by your company.</p>
+        </div>
+
+        <div>
+            <a href="{% url 'dashboard' %}" class="button secondary">
+                ← Dashboard
+            </a>
+            <a href="{% url 'post_job' %}" class="button">
+                + Post a Job
+            </a>
+        </div>
+    </div>
+
+    <section class="stats">
+        <div class="stat-card">
+            <p>Total Jobs</p>
+            <h2>{{ total_jobs }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Active Jobs</p>
+            <h2>{{ active_jobs }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Closed Jobs</p>
+            <h2>{{ closed_jobs }}</h2>
+        </div>
+    </section>
+
+    {% for job in jobs %}
+        <article class="job-card">
+            <div class="job-heading">
+                <div>
+                    <h2>{{ job.job_title }}</h2>
+                    <div class="job-meta">
+                        <div>📍 {{ job.location|default:"Location not specified" }}</div>
+                        <div>🕒 {{ job.employment_type|default:"Not specified" }}</div>
+                        <div>📅 Posted {{ job.posted_at|date:"d M Y" }}</div>
+                    </div>
+                </div>
+
+                {% if job.is_active %}
+                    <span class="status">Active</span>
+                {% else %}
+                    <span class="status closed">Closed</span>
+                {% endif %}
+            </div>
+
+            <div class="description">
+                <strong>Required Skills:</strong>
+                {{ job.required_skills|default:"Not specified" }}
+
+                <br><br>
+                <strong>Qualification:</strong>
+                {{ job.qualification|default:"Not specified" }}
+
+                <br><br>
+                <strong>Experience:</strong>
+                {{ job.experience|default:"Not specified" }}
+
+                <br><br>
+                <strong>Job Description:</strong>
+                {{ job.job_description|default:"No description provided."|truncatewords:45 }}
+            </div>
+
+            <div class="actions">
+                <a class="button"
+                   href="{% url 'job_detail' job.id %}">
+                    View Job
+                </a>
+
+                <form method="post"
+                      action="{% url 'toggle_job_status' job.id %}">
+                    {% csrf_token %}
+
+                    {% if job.is_active %}
+                        <button class="button warning" type="submit">
+                            Close Job
+                        </button>
+                    {% else %}
+                        <button class="button secondary" type="submit">
+                            Reopen Job
+                        </button>
+                    {% endif %}
+                </form>
+
+                <form method="post"
+                      action="{% url 'delete_job' job.id %}"
+                      onsubmit="return confirm('Are you sure you want to delete this job? This action cannot be undone.');">
+                    {% csrf_token %}
+                    <button class="button danger" type="submit">
+                        Delete Job
+                    </button>
+                </form>
+            </div>
+        </article>
+    {% empty %}
+        <section class="empty">
+            <h2>No jobs posted yet</h2>
+            <p>Your job postings will appear here after you post a vacancy.</p>
+            <a href="{% url 'post_job' %}" class="button">
+                Post Your First Job
+            </a>
+        </section>
+    {% endfor %}
+</main>
+</body>
+</html>

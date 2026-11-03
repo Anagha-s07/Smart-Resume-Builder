@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Resume Template</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 35px 20px;
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            color: #1f2937;
+        }
+        .container { max-width: 1100px; margin: auto; }
+        .top { display: flex; justify-content: space-between;
+               align-items: center; gap: 15px; flex-wrap: wrap; }
+        h1 { margin-bottom: 8px; }
+        .subtitle { color: #64748b; margin-top: 0; }
+        .back, .choose {
+            display: inline-block; text-decoration: none;
+            padding: 11px 16px; border-radius: 8px;
+            font-weight: bold;
+        }
+        .back { background: white; color: #334155; border: 1px solid #cbd5e1; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 22px; margin-top: 30px;
+        }
+        .card {
+            background: white; border: 1px solid #e2e8f0;
+            border-radius: 15px; padding: 20px;
+            box-shadow: 0 5px 18px rgba(15,23,42,.05);
+        }
+        .sample {
+            height: 190px; padding: 18px; overflow: hidden;
+            border: 1px solid #dbe2ea; background: #fff;
+            margin-bottom: 18px; color: #334155;
+        }
+        .sample .line { height: 7px; background: #dbe2ea; margin: 10px 0; width: 85%; }
+        .sample .short { width: 55%; }
+        .sample .heading { font-size: 17px; font-weight: bold; margin-bottom: 10px; }
+        .modern .heading { color: #2563eb; }
+        .minimalist .heading { text-align: center; color: #111827; }
+        .creative .heading { color: #7c3aed; }
+        .executive .heading { color: #0f766e; }
+        .ats .heading { color: #111827; }
+        h2 { margin: 0 0 8px; font-size: 21px; }
+        .description { min-height: 40px; color: #64748b; line-height: 1.5; }
+        .choose { display: block; text-align: center; background: #2563eb; color: white; }
+        .choose:hover { background: #1d4ed8; }
+        @media(max-width: 500px) { body { padding: 22px 14px; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="top">
+        <div>
+            <h1>Choose Your Resume Template</h1>
+            <p class="subtitle">Select a professional design for your resume.</p>
+        </div>
+        <a class="back" href="{% url 'dashboard' %}">← Dashboard</a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <div class="grid">
+        <div class="card">
+            <div class="sample modern">
+                <div class="heading">YOUR NAME</div>
+                <div class="line short"></div>
+                <hr>
+                <strong>PROFILE</strong>
+                <div class="line"></div><div class="line short"></div>
+                <strong>SKILLS</strong>
+                <div class="line"></div><div class="line short"></div>
+            </div>
+            <h2>Modern</h2>
+            <p class="description">A clean, contemporary design with clear sections.</p>
+            <a class="choose" href="{% url 'resume_preview' resume_id=resume.id template='modern' %}">Choose Modern</a>
+        </div>
+
+        <div class="card">
+            <div class="sample minimalist">
+                <div class="heading">YOUR NAME</div>
+                <div class="line short" style="margin-left:auto;margin-right:auto;"></div>
+                <hr>
+                <strong>EDUCATION</strong>
+                <div class="line"></div>
+                <strong>EXPERIENCE</strong>
+                <div class="line"></div><div class="line short"></div>
+            </div>
+            <h2>Minimalist</h2>
+            <p class="description">Simple formatting with an uncluttered appearance.</p>
+            <a class="choose" href="{% url 'resume_preview' resume_id=resume.id template='minimalist' %}">Choose Minimalist</a>
+        </div>
+
+        <div class="card">
+            <div class="sample creative">
+                <div class="heading">YOUR NAME ✦</div>
+                <div class="line short"></div>
+                <hr>
+                <strong>ABOUT ME</strong>
+                <div class="line"></div><div class="line short"></div>
+                <strong>PROJECTS</strong>
+                <div class="line"></div>
+            </div>
+            <h2>Creative</h2>
+            <p class="description">A distinctive style for projects and creative roles.</p>
+            <a class="choose" href="{% url 'resume_preview' resume_id=resume.id template='creative' %}">Choose Creative</a>
+        </div>
+
+        <div class="card">
+            <div class="sample executive">
+                <div class="heading">YOUR NAME</div>
+                <div class="line short"></div>
+                <hr>
+                <strong>PROFESSIONAL PROFILE</strong>
+                <div class="line"></div><div class="line short"></div>
+                <strong>QUALIFICATIONS</strong>
+                <div class="line"></div>
+            </div>
+            <h2>Executive</h2>
+            <p class="description">A formal, polished layout for corporate roles.</p>
+            <a class="choose" href="{% url 'resume_preview' resume_id=resume.id template='executive' %}">Choose Executive</a>
+        </div>
+
+        <div class="card">
+            <div class="sample ats">
+                <div class="heading">YOUR NAME</div>
+                <div class="line short"></div>
+                <hr>
+                <strong>SUMMARY</strong>
+                <div class="line"></div>
+                <strong>SKILLS</strong>
+                <div class="line"></div>
+                <strong>EDUCATION</strong>
+                <div class="line short"></div>
+            </div>
+            <h2>ATS-Friendly</h2>
+            <p class="description">A straightforward, text-focused format designed for readability.</p>
+            <a class="choose" href="{% url 'resume_preview' resume_id=resume.id template='ats' %}">Choose ATS-Friendly</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

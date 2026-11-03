@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Resumes | Smart Resume Builder</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #202b3c;
+        }
+
+        .navbar {
+            background: #172554;
+            color: white;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 18px;
+            font-size: 14px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1150px;
+            margin: 35px auto;
+        }
+
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 29px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin: 0;
+        }
+
+        .button {
+            display: inline-block;
+            text-decoration: none;
+            border: none;
+            border-radius: 7px;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .secondary {
+            background: #e8efff;
+            color: #1d4ed8;
+        }
+
+        .download {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .resume-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+        }
+
+        .resume-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 23px;
+            box-shadow: 0 5px 18px rgba(15, 23, 42, 0.04);
+        }
+
+        .resume-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+            background: #e8efff;
+            font-size: 25px;
+            margin-bottom: 16px;
+        }
+
+        .resume-card h2 {
+            font-size: 20px;
+            margin: 0 0 10px;
+            overflow-wrap: anywhere;
+        }
+
+        .resume-email {
+            color: #64748b;
+            font-size: 14px;
+            overflow-wrap: anywhere;
+        }
+
+        .resume-date {
+            color: #64748b;
+            font-size: 12px;
+            margin: 17px 0;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            border-top: 1px solid #edf0f5;
+            padding-top: 17px;
+        }
+
+        .empty-state {
+            background: white;
+            border: 1px dashed #cbd5e1;
+            border-radius: 14px;
+            text-align: center;
+            padding: 55px 20px;
+        }
+
+        .empty-state h2 {
+            margin-top: 0;
+        }
+
+        .empty-state p {
+            color: #64748b;
+            margin-bottom: 22px;
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                align-items: flex-start;
+            }
+
+            .navbar a {
+                margin: 0 12px 0 0;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .container {
+                margin-top: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="brand">Smart Resume Builder</div>
+
+        <div>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'my_resumes' %}">My Resumes</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </nav>
+
+    <main class="container">
+
+        <div class="page-heading">
+            <div>
+                <h1>My Resumes</h1>
+                <p class="subtitle">
+                    View, edit, preview and download your saved resumes.
+                </p>
+            </div>
+
+            <a href="{% url 'create_resume' %}" class="button primary">
+                + Create New Resume
+            </a>
+        </div>
+
+        {% if resumes %}
+            <div class="resume-grid">
+
+                {% for resume in resumes %}
+                    <article class="resume-card">
+
+                        <div class="resume-icon">📄</div>
+
+                        <h2>{{ resume.full_name }}</h2>
+
+                        <p class="resume-email">
+                            {{ resume.email }}
+                        </p>
+
+                        <p class="resume-email">
+                            {{ resume.phone }}
+                        </p>
+
+                        <p class="resume-date">
+                            Created:
+                            {{ resume.created_at|date:"d M Y, h:i A" }}
+                        </p>
+
+                        <div class="actions">
+
+                            <a
+                                href="{% url 'edit_resume' resume.id %}"
+                                class="button secondary">
+                                Edit
+                            </a>
+
+                            <a
+                                href="{% url 'template_selection' resume.id %}"
+                                class="button primary">
+                                Preview / Templates
+                            </a>
+
+                            <a
+                                href="{% url 'download_resume_pdf' resume.id 'modern' %}"
+                                class="button download">
+                                Download PDF
+                            </a>
+
+                        </div>
+
+                    </article>
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+                <div style="font-size: 45px;">📄</div>
+
+                <h2>No resumes yet</h2>
+
+                <p>
+                    Create your first resume to see it listed here.
+                </p>
+
+                <a href="{% url 'create_resume' %}"
+                   class="button primary">
+                    Create My First Resume
+                </a>
+            </div>
+
+        {% endif %}
+
+    </main>
+
+</body>
+</html>

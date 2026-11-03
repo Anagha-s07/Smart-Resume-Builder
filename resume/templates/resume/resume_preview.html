@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ resume.full_name }} | Resume</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #eef1f5;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #222;
+        }
+
+        .top-bar {
+            background: #111827;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 9px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .back-btn {
+            background: white;
+            color: #111827;
+        }
+
+        .print-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .resume-page {
+            width: 210mm;
+            min-height: 297mm;
+            background: white;
+            margin: 35px auto;
+            padding: 22mm;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .name {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .contact {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            margin-top: 22px;
+        }
+
+        .section-title {
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .section-content {
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+
+
+        /* =========================
+           MODERN TEMPLATE
+           ========================= */
+
+        .modern .name {
+            color: #2563eb;
+        }
+
+        .modern .header-line {
+            height: 3px;
+            background: #2563eb;
+            margin-bottom: 20px;
+        }
+
+        .modern .section-title {
+            color: #2563eb;
+            border-bottom: 1px solid #d1d5db;
+            padding-bottom: 5px;
+        }
+
+
+        /* =========================
+           CLASSIC TEMPLATE
+           ========================= */
+
+        .classic {
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        .classic .name {
+            text-align: center;
+            color: #111;
+        }
+
+        .classic .contact {
+            text-align: center;
+        }
+
+        .classic .header-line {
+            border-top: 2px solid #111;
+            margin: 15px 0 20px;
+        }
+
+        .classic .section-title {
+            border-bottom: 1px solid #333;
+            color: #111;
+        }
+
+
+        /* =========================
+           MINIMAL TEMPLATE
+           ========================= */
+
+        .minimal {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .minimal .name {
+            font-size: 28px;
+            font-weight: normal;
+            color: #222;
+        }
+
+        .minimal .contact {
+            color: #777;
+        }
+
+        .minimal .header-line {
+            border-top: 1px solid #ddd;
+            margin-bottom: 25px;
+        }
+
+        .minimal .section {
+            margin-top: 25px;
+        }
+
+        .minimal .section-title {
+            font-size: 14px;
+            letter-spacing: 1px;
+            color: #555;
+        }
+
+
+        /* =========================
+           PROFESSIONAL TEMPLATE
+           ========================= */
+
+        .professional .name {
+            color: #1f2937;
+        }
+
+        .professional .header-line {
+            height: 4px;
+            background: #1f2937;
+            margin-bottom: 20px;
+        }
+
+        .professional .section-title {
+            background: #f3f4f6;
+            padding: 7px 10px;
+            border-left: 4px solid #1f2937;
+        }
+
+
+        @media print {
+
+            body {
+                background: white;
+            }
+
+            .top-bar {
+                display: none;
+            }
+
+            .resume-page {
+                margin: 0;
+                box-shadow: none;
+                width: 210mm;
+                min-height: 297mm;
+            }
+        }
+
+
+        @media (max-width: 800px) {
+
+            .resume-page {
+                width: 95%;
+                min-height: auto;
+                margin: 20px auto;
+                padding: 30px;
+            }
+
+            .top-bar {
+                padding: 12px 15px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- TOP BAR -->
+
+<div class="top-bar">
+
+    <div class="logo">
+        SmartResume
+    </div>
+
+    <div class="actions">
+
+        <a href="{% url 'template_selection' resume_id=resume.id %}"
+           class="btn back-btn">
+            Change Template
+        </a>
+
+       <a href="{% url 'download_resume_pdf' resume_id=resume.id template=template %}"
+   class="btn print-btn">
+    Download PDF
+</a>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     MODERN TEMPLATE
+     ========================= -->
+
+{% if template == "modern" %}
+
+<div class="resume-page modern">
+
+    <div class="name">
+        {{ resume.full_name }}
+    </div>
+
+    <div class="contact">
+        {{ resume.email }} | {{ resume.phone }}
+        {% if resume.address %}
+        | {{ resume.address }}
+        {% endif %}
+    </div>
+
+    <div class="header-line"></div>
+
+
+    {% if resume.career_objective %}
+    <div class="section">
+        <div class="section-title">Career Objective</div>
+        <div class="section-content">
+            {{ resume.career_objective }}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if resume.education %}
+    <div class="section">
+        <div class="section-title">Education</div>
+        <div class="section-content">
+            {{ resume.education }}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if resume.skills %}
+    <div class="section">
+        <div class="section-title">Technical Skills</div>
+        <div class="section-content">
+            {{ resume.skills }}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if resume.projects %}
+    <div class="section">
+        <div class="section-title">Projects</div>
+        <div class="section-content">
+            {{ resume.projects }}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if resume.certifications %}
+    <div class="section">
+        <div class="section-title">Certifications</div>
+        <div class="section-content">
+            {{ resume.certifications }}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if resume.internships %}
+    <div class="section">
+        <div class="section-title">Internships</div>
+        <div class="section-content">
+            {{ resume.internships }}
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+
+<!-- =========================
+     CLASSIC TEMPLATE
+     ========================= -->
+
+{% elif template == "classic" %}
+
+<div class="resume-page classic">
+
+    <div class="name">
+        {{ resume.full_name }}
+    </div>
+
+    <div class="contact">
+        {{ resume.email }} | {{ resume.phone }}
+        {% if resume.address %}
+        | {{ resume.address }}
+        {% endif %}
+    </div>
+
+    <div class="header-line"></div>
+
+
+    {% if resume.career_objective %}
+    <div class="section">
+        <div class="section-title">Career Objective</div>
+        <div class="section-content">
+            {{ resume.career_objective }}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if resume.education %}
+    <div class="section">
+        <div class="section-title">Education</div>
+        <div class="section-content">
+            {{ resume.education }}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if resume.skills %}
+    <div class="section">
+        <div class="section-title">Skills</div>
+        <div class="section-content">
+            {{ resume.skills }}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if resume.projects %}
+    <div class="section">
+        <div class="section-title">Projects</div>
+        <div class="section-content">
+            {{ resume.projects }}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if resume.certifications %}
+    <div class="section">
+        <div class="section-title">Certifications</div>
+        <div class="section-content">
+            {{ resume.certifications }}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if resume.internships %}
+    <div class="section">
+        <div class="section-title">Internships</div>
+        <div class="section-content">
+            {{ resume.internships }}
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+
+<!-- =========================
+     MINIMAL TEMPLATE
+     ========================= -->
+
+{% elif template == "minimal" %}
+
+<div class="resume-page minimal">
+
+    <div class="name">
+        {{ resume.full_name }}
+    </div>
+
+    <div class="contact">
+        {{ resume.email }} | {{ resume.phone }}
+        {% if resume.address %}
+        | {{ resume.address }}
+        {% endif %}
+    </div>
+
+    <div class="header-line"></div>
+
+
+    {% if resume.career_objective %}
+    <div class="section">
+        <div class="section-title">Career Objective</div>
+        <div class="section-content">
+            {{ resume.career_objective }}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if resume.education %}
+    <div class="section">
+        <div class="section-title">Education</div>
+        <div class="section-content">
+            {{ resume.education }}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if resume.skills %}
+    <div class="section">
+        <div class="section-title">Skills</div>
+        <div class="section-content">
+            {{ resume.skills }}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if resume.projects %}
+    <div class="section">
+        <div class="section-title">Projects</div>
+        <div class="section-content">
+            {{ resume.projects }}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if resume.certifications %}
+    <div class="section">
+        <div class="section-title">Certifications</div>
+        <div class="section-content">
+            {{ resume.certifications }}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if resume.internships %}
+    <div class="section">
+        <div class="section-title">Internships</div>
+        <div class="section-content">
+            {{ resume.internships }}
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+
+<!-- =========================
+     PROFESSIONAL TEMPLATE
+     ========================= -->
+
+{% elif template == "professional" %}
+
+<div class="resume-page professional">
+
+    <div class="name">
+        {{ resume.full_name }}
+    </div>
+
+    <div class="contact">
+        {{ resume.email }} | {{ resume.phone }}
+        {% if resume.address %}
+        | {{ resume.address }}
+        {% endif %}
+    </div>
+
+    <div class="header-line"></div>
+
+
+    {% if resume.career_objective %}
+    <div class="section">
+        <div class="section-title">Career Objective</div>
+        <div class="section-content">
+            {{ resume.career_objective }}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if resume.education %}
+    <div class="section">
+        <div class="section-title">Education</div>
+        <div class="section-content">
+            {{ resume.education }}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if resume.skills %}
+    <div class="section">
+        <div class="section-title">Technical Skills</div>
+        <div class="section-content">
+            {{ resume.skills }}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if resume.projects %}
+    <div class="section">
+        <div class="section-title">Projects</div>
+        <div class="section-content">
+            {{ resume.projects }}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if resume.certifications %}
+    <div class="section">
+        <div class="section-title">Certifications</div>
+        <div class="section-content">
+            {{ resume.certifications }}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if resume.internships %}
+    <div class="section">
+        <div class="section-title">Internships</div>
+        <div class="section-content">
+            {{ resume.internships }}
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endif %}
+
+
+</body>
+</html>

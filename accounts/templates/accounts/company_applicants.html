@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Applicants | Smart Resume</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fa;
+            color: #1f2937;
+            margin: 0;
+            padding: 30px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+        .card {
+            background: white;
+            padding: 22px;
+            margin: 16px 0;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px #0000000d;
+        }
+        .button {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+        .muted { color: #64748b; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Job Applicants</h1>
+    <p class="muted">Applications submitted for your company's vacancies.</p>
+    <p><a class="button" href="{% url 'dashboard' %}">Back to Dashboard</a></p>
+
+    {% for application in applications %}
+        <div class="card">
+            <h3>{{ application.job.job_title }}</h3>
+            <p><strong>Applicant:</strong>
+                {{ application.applicant.get_full_name|default:application.applicant.username }}
+            </p>
+            <p><strong>Username:</strong> {{ application.applicant.username }}</p>
+            <p><strong>Applied:</strong> {{ application.applied_at|date:"d M Y, h:i A" }}</p>
+        </div>
+    {% empty %}
+        <div class="card">
+            <p>No applications have been submitted for your jobs yet.</p>
+        </div>
+    {% endfor %}
+</div>
+</body>
+</html>

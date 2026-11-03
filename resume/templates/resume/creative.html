@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ resume.full_name }} - Creative Resume</title>
+    <style>
+        @page { size: A4; margin: 16mm; }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Arial, sans-serif; background: #f3f0ff; color: #312e45; line-height: 1.5; }
+        .actions { max-width: 800px; margin: 20px auto; display: flex; gap: 10px; flex-wrap: wrap; }
+        .actions a { padding: 10px 15px; background: #6d28d9; color: white; border-radius: 6px; text-decoration: none; }
+        .paper { max-width: 800px; margin: 20px auto; background: white; }
+        header { padding: 35px; background: #4c1d95; color: white; border-left: 9px solid #c4b5fd; }
+        h1 { margin: 0 0 10px; font-size: 31px; overflow-wrap: anywhere; }
+        .contact { overflow-wrap: anywhere; }
+        .body { padding: 8px 35px 35px; }
+        h2 { color: #6d28d9; font-size: 16px; text-transform: uppercase; letter-spacing: .8px; margin-top: 24px; border-bottom: 2px solid #ede9fe; padding-bottom: 6px; }
+        .content { white-space: pre-line; overflow-wrap: anywhere; }
+        @media print { body { background: white; } .actions { display: none; } .paper { max-width: none; margin: 0; } }
+    </style>
+</head>
+<body>
+<div class="actions">
+    <a href="{% url 'template_selection' resume_id=resume.id %}">← Templates</a>
+    <a href="{% url 'download_resume_pdf' resume_id=resume.id template='creative' %}">Download PDF</a>
+    <a href="#" onclick="window.print(); return false;">Print</a>
+</div>
+<main class="paper">
+    <header>
+        <h1>{{ resume.full_name }}</h1>
+        <div class="contact">{{ resume.email }}{% if resume.phone %} | {{ resume.phone }}{% endif %}{% if resume.address %}<br>{{ resume.address }}{% endif %}</div>
+    </header>
+    <div class="body">
+        {% if resume.career_objective %}<section><h2>About Me</h2><div class="content">{{ resume.career_objective }}</div></section>{% endif %}
+        {% if resume.skills %}<section><h2>Skills</h2><div class="content">{{ resume.skills }}</div></section>{% endif %}
+        {% if resume.projects %}<section><h2>Featured Projects</h2><div class="content">{{ resume.projects }}</div></section>{% endif %}
+        {% if resume.education %}<section><h2>Education</h2><div class="content">{{ resume.education }}</div></section>{% endif %}
+        {% if resume.internships %}<section><h2>Experience & Internships</h2><div class="content">{{ resume.internships }}</div></section>{% endif %}
+        {% if resume.certifications %}<section><h2>Certifications</h2><div class="content">{{ resume.certifications }}</div></section>{% endif %}
+    </div>
+</main>
+</body>
+</html>

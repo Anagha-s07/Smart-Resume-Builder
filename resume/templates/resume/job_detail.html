@@ -1,0 +1,425 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ job.job_title }} | Smart Resume Builder</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #263247;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background: #172554;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 18px;
+            font-size: 14px;
+        }
+
+        .navbar a:hover {
+            color: #bfdbfe;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 35px auto;
+            padding: 0 18px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #1d4ed8;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .job-card {
+            background: white;
+            border-radius: 14px;
+            padding: 30px;
+            box-shadow: 0 5px 22px rgba(15, 23, 42, 0.08);
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 22px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #172554;
+            margin-bottom: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .company-name {
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        .status {
+            padding: 6px 13px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .closed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .detail-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 16px;
+            border-radius: 9px;
+            overflow-wrap: anywhere;
+        }
+
+        .detail-label {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            color: #1e293b;
+            font-weight: bold;
+            white-space: pre-line;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section h2 {
+            color: #172554;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .section p {
+            color: #475569;
+            white-space: pre-line;
+            overflow-wrap: anywhere;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 28px;
+            padding-top: 22px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .btn {
+            display: inline-block;
+            border: none;
+            border-radius: 7px;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+        }
+
+        .btn-disabled {
+            background: #e2e8f0;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+
+        .notice {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 8px;
+            background: #eff6ff;
+            color: #1e40af;
+            font-size: 14px;
+        }
+
+        .message {
+            padding: 12px 16px;
+            margin-bottom: 15px;
+            border-radius: 7px;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        footer {
+            text-align: center;
+            color: #64748b;
+            padding: 25px 15px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 16px 5%;
+            }
+
+            .navbar a {
+                margin-left: 0;
+                margin-right: 12px;
+            }
+
+            .container {
+                margin-top: 22px;
+            }
+
+            .job-card {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 23px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="brand">Smart Resume Builder</div>
+
+        <div>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+
+            {% if is_company %}
+                <a href="{% url 'manage_jobs' %}">Manage Jobs</a>
+            {% endif %}
+
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </nav>
+
+    <main class="container">
+
+        <a class="back-link" href="{% url 'dashboard' %}">
+            &larr; Back to Dashboard
+        </a>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="job-card">
+
+            <div class="job-header">
+                <div>
+                    <h1>{{ job.job_title }}</h1>
+
+                    <p class="company-name">
+                        Posted by
+                        {% if job.company.userprofile.company_name %}
+                            {{ job.company.userprofile.company_name }}
+                        {% else %}
+                            {{ job.company.username }}
+                        {% endif %}
+                    </p>
+                </div>
+
+                {% if job.is_active %}
+                    <span class="status active">Active</span>
+                {% else %}
+                    <span class="status closed">Closed</span>
+                {% endif %}
+            </div>
+
+            <div class="details-grid">
+
+                <div class="detail-box">
+                    <div class="detail-label">Location</div>
+                    <div class="detail-value">
+                        {{ job.location|default:"Not specified" }}
+                    </div>
+                </div>
+
+                <div class="detail-box">
+                    <div class="detail-label">Employment Type</div>
+                    <div class="detail-value">
+                        {{ job.employment_type|default:"Not specified" }}
+                    </div>
+                </div>
+
+                <div class="detail-box">
+                    <div class="detail-label">Qualification</div>
+                    <div class="detail-value">
+                        {{ job.qualification|default:"Not specified" }}
+                    </div>
+                </div>
+
+                <div class="detail-box">
+                    <div class="detail-label">Experience</div>
+                    <div class="detail-value">
+                        {{ job.experience|default:"Not specified" }}
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="section">
+                <h2>Required Skills</h2>
+                <p>{{ job.required_skills|default:"Not specified" }}</p>
+            </div>
+
+            <div class="section">
+                <h2>Job Description</h2>
+                <p>{{ job.job_description|default:"No description provided." }}</p>
+            </div>
+
+            <div class="section">
+                <h2>Posted On</h2>
+                <p>{{ job.posted_at|date:"d M Y" }}</p>
+            </div>
+
+            <div class="actions">
+
+                {% if is_company %}
+
+                    {% if job.company_id == request.user.id %}
+                        <div class="notice">
+                            <strong>Your job posting</strong><br>
+                            You posted this job. Applicants cannot apply using
+                            the company account.
+                        </div>
+
+                        <a href="{% url 'manage_jobs' %}"
+                           class="btn btn-primary">
+                            Manage This Job
+                        </a>
+
+                    {% else %}
+                        <div class="notice">
+                            You are viewing this job as a company account.
+                            Applying for jobs is available to job seekers.
+                        </div>
+                    {% endif %}
+
+                {% else %}
+
+                    {% if job.is_active %}
+
+                        {% if already_applied %}
+                            <button type="button"
+                                    class="btn btn-disabled"
+                                    disabled>
+                                Already Applied
+                            </button>
+                        {% else %}
+                            <form method="POST"
+                                  action="{% url 'apply_job' job.id %}">
+                                {% csrf_token %}
+
+                                <button type="submit"
+                                        class="btn btn-primary">
+                                    Apply Now
+                                </button>
+                            </form>
+                        {% endif %}
+
+                    {% else %}
+                        <button type="button"
+                                class="btn btn-disabled"
+                                disabled>
+                            Applications Closed
+                        </button>
+                    {% endif %}
+
+                {% endif %}
+
+                <a href="{% url 'dashboard' %}"
+                   class="btn btn-secondary">
+                    Back
+                </a>
+
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        &copy; {% now "Y" %} Smart Resume Builder with ML-Based Job Recommendation System
+    </footer>
+
+</body>
+</html>

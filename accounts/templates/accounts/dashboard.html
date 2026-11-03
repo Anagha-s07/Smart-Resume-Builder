@@ -1,0 +1,117 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Smart Resume Builder</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            margin: 0;
+            color: #243047;
+        }
+
+        header {
+            background: #263b80;
+            color: white;
+            padding: 22px 35px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 35px auto;
+            padding: 25px;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+        .card a {
+            display: inline-block;
+            margin-top: 10px;
+            background: #263b80;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        .card a:hover {
+            background: #18285c;
+        }
+
+        .logout {
+            display: inline-block;
+            margin-top: 25px;
+            color: #b42318;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Smart Resume Builder</h1>
+    </header>
+
+    <main class="container">
+        <div class="welcome">
+            <h2>Hello, {{ request.user.username }}!</h2>
+            <p>Welcome to your dashboard. What would you like to do?</p>
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <h3>Create Resume</h3>
+                <p>Create and customize your professional resume.</p>
+                <a href="{% url 'create_resume' %}">Create Resume</a>
+            </div>
+
+            <div class="card">
+                <h3>My Resumes</h3>
+                <p>View your saved resumes.</p>
+                <a href="{% url 'my_resumes' %}">View Resumes</a>
+            </div>
+
+            <div class="card">
+                <h3>Job Recommendations</h3>
+                <p>Explore job recommendations based on your resume.</p>
+                <a href="{% url 'dashboard' %}#recommended-jobs">View Recommendations</a>
+            </div>
+
+            <div class="card">
+                <h3>My Profile</h3>
+                <p>View your profile information.</p>
+                <a href="{% url 'my_profile' %}">View Profile</a>
+            </div>
+        </div>
+
+        <a class="logout" href="{% url 'logout' %}">Logout</a>
+    </main>
+</body>
+</html>
+```
